@@ -6,9 +6,9 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	
-	<title>Upload Files</title>
+	<title>Lan Files Uploader</title>
 	
-	<link rel='stylesheet' href='css/tailwind.min.css' media='all'/>
+	<link rel="stylesheet" href="css/tailwind.min.css">
 	<link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
 </head>
 
@@ -50,11 +50,13 @@
 		document.getElementById( 'alerts' ).innerHTML += `<div class="flex items-center rounded-lg p-4 mb-4 text-sm ${classess}"><svg class="w-10 h-10 inline mr-3 min-w-min" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg><div>${text}</div></div>`;
 	}
 	
-	document.getElementById( "files" ).addEventListener( 'change', function ( event ) {
-		event.preventDefault();
+	function upload() {
+		var progressBar = document.getElementById( 'progress-bar' );
+		var progressProcess = document.getElementById( 'progress-bar' );
+		var alerts = document.getElementById( 'progress-bar-process' );
 		
-		document.getElementById( 'progress-bar' ).classList.remove( 'hidden' );
-		document.getElementById( 'alerts' ).classList.add( 'hidden' );
+		progressBar.classList.remove( 'hidden' );
+		alerts.innerHTML = '';
 		
 		var formData = new FormData( document.getElementById( 'form-upload-files' ) );
 		var xhttp = new XMLHttpRequest();
@@ -63,16 +65,14 @@
 			var percent_completed = Math.round( (
 				                                    event.loaded / event.total
 			                                    ) * 100 );
-			document.getElementById( 'progress-bar-process' ).style.width = percent_completed + '%';
-			document.getElementById( 'progress-bar-process' ).innerHTML = percent_completed + '%';
+			progressProcess.style.width = percent_completed + '%';
+			progressProcess.innerHTML = percent_completed + '%';
 		} );
 		xhttp.onreadystatechange = function () {
 			if ( this.readyState == 4 && this.status == 200 ) {
 				var response = JSON.parse( this.responseText );
 				
-				document.getElementById( 'alerts' ).innerHTML = '';
-				document.getElementById( 'alerts' ).classList.remove( 'hidden' );
-				document.getElementById( 'progress-bar' ).classList.add( 'hidden' );
+				progressBar.classList.add( 'hidden' );
 				
 				if ( response.success != '' ) {
 					alert( '<span class="font-medium">' + response.success + '</span> Upload Successful.' );
@@ -88,6 +88,12 @@
 			}
 		};
 		xhttp.send( formData );
+	}
+	
+	document.getElementById( "files" ).addEventListener( 'change', function ( event ) {
+		event.preventDefault();
+		
+		upload();
 	} );
 </script>
 </body>
